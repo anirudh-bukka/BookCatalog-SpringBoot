@@ -4,6 +4,7 @@ import com.anirudh.bookstore.demo.dao.ReaderRepository;
 import com.anirudh.bookstore.demo.entity.Author;
 import com.anirudh.bookstore.demo.entity.Reader;
 import jakarta.transaction.Transactional;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -16,6 +17,7 @@ public class ReaderServiceImpl implements ReaderService {
 
     public ReaderServiceImpl() {}
 
+    @Autowired
     public ReaderServiceImpl(ReaderRepository readerRepository) {
         this.readerRepository = readerRepository;
     }

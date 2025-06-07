@@ -18,6 +18,7 @@ public class DemoSecurityConfig {
                         .requestMatchers("/booksApi/**").authenticated()
                         .requestMatchers("/authorsApi/**").authenticated()
                         .requestMatchers("/readersApi/**").permitAll()
+                        .requestMatchers("/readersApi/readers").permitAll()
                         .requestMatchers("/readersApi/**").authenticated()
                 )
                 .httpBasic(Customizer.withDefaults());

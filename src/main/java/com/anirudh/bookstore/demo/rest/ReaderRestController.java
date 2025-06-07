@@ -1,9 +1,11 @@
 package com.anirudh.bookstore.demo.rest;
 
+import com.anirudh.bookstore.demo.dao.BookRepository;
 import com.anirudh.bookstore.demo.dao.ReaderRepository;
 import com.anirudh.bookstore.demo.dto.ReaderRequest;
 import com.anirudh.bookstore.demo.entity.Book;
 import com.anirudh.bookstore.demo.entity.Reader;
+import com.anirudh.bookstore.demo.service.BookService;
 import com.anirudh.bookstore.demo.service.ReaderService;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,15 +20,21 @@ import java.util.Optional;
 @RequestMapping("/readersApi")
 public class ReaderRestController {
 
+    @Autowired
     private ReaderRepository readerRepository;
+    @Autowired
     private ReaderService readerService;
+    @Autowired
+    private BookRepository bookRepository;
+    @Autowired
+    private BookService bookService;
 
     public ReaderRestController() {}
 
     @Autowired
-    public ReaderRestController(ReaderRepository readerRepository, ReaderService readerService) {
+    public ReaderRestController(ReaderRepository readerRepository, BookRepository bookRepository) {
         this.readerRepository = readerRepository;
-        this.readerService = readerService;
+        this.bookRepository = bookRepository;
     }
 
     @GetMapping("/readers")
@@ -46,8 +54,6 @@ public class ReaderRestController {
         return reader;
     }
 
-    private Book book;
-
     public Book getBook() {
         return book;
     }
@@ -56,22 +62,6 @@ public class ReaderRestController {
         this.book = book;
     }
 
-//    @PostMapping("/readers")
-//    @Transactional
-//    public Reader addReaderWithBooks(@RequestBody ReaderRequest readerRequest) {
-//        if (readerRequest.getReader() == null) {
-//            throw new RuntimeException("Reader information is missing");
-//        }
-//
-//        System.out.println("Received Reader: " + readerRequest.getReader());
-//
-//        Reader reader = new Reader();
-//        reader.setFirstName(readerRequest.getReader().getFirstName());
-//        reader.setLastName(readerRequest.getReader().getLastName());
-//        reader.setEmail(readerRequest.getReader().getEmail());
-//
-//        return readerService.saveReader(reader);
-//    }
     @PostMapping("/readers")
     @Transactional
     public List<Reader> addReaders(@RequestBody List<ReaderRequest> readerRequests) {
@@ -91,25 +81,75 @@ public class ReaderRestController {
         return readers;
     }
 
-    @PutMapping("/readers/{readerId}/books")
+    Reader reader = new Reader();
+    List<Reader> readers;
+    Book book = new Book();
+    @PutMapping("readers/{readerId}/books")
     @Transactional
-    public Reader addBooksToReader(@PathVariable int readerId, @RequestBody List<Integer> bookIds) {
+    public List<Book> addBooksToReader(@PathVariable int readerId, @RequestBody List<Integer> bookIds) {
         Optional<Reader> optionalReader = readerRepository.findById(readerId);
-        if (!optionalReader.isPresent()) {
-            throw new RuntimeException("Reader with id " + readerId + " not found");
+        if (optionalReader.isEmpty()) {
+            throw new RuntimeException("Reader with id: " + readerId + " does not exist.");
         }
 
         Reader reader = optionalReader.get();
-        List<Book> books = new ArrayList<>();
-        for (int bookId : bookIds) {
-            Book book = new Book();
-            book.setId(bookId);
-            books.add(book);
-        }
-        reader.setBooks(books);
+        List<Book> validBooks = new ArrayList<>();
 
-        return readerRepository.save(reader);
+        for (Integer bookId : bookIds) {
+            Optional<Book> optionalBook = bookRepository.findById(bookId);
+            if (optionalBook.isEmpty()) {
+                throw new RuntimeException("Book with id: " + bookId + " does not exist.");
+            }
+
+            Book book = optionalBook.get();
+            if (!reader.getBooks().contains(book)) { // Prevent duplicate entries
+                reader.getBooks().add(book);
+                validBooks.add(book);
+            }
+        }
+
+        readerRepository.save(reader); // Save the updated reader
+        return validBooks;
     }
+
+
+//  //  ---------------------
+//    Reader reader = new Reader();
+//    List<Reader> readers;
+//    Book book = new Book();
+
+//    @PutMapping("readers/{readerId}/books")
+//    @Transactional
+//    public List<Book> addBooksToReader(@PathVariable int readerId, @RequestBody List<Integer> bookIds) {
+//        Optional<Reader> optionalReader = readerRepository.findById(readerId);
+//        if(optionalReader.isPresent())
+//            reader = optionalReader.get();
+//        else
+//            throw new RuntimeException("Reader with id: " + readerId + " does not exist.");
+//
+//        List<Book> validBooks = new ArrayList<>();
+//
+//        for(Integer bookId : bookIds) {
+//            Optional<Book> optionalBook = bookRepository.findById(bookId);
+//            if(!optionalBook.isPresent())
+//                continue;
+//
+//            Book existingBook = optionalBook.get();
+//
+//            if(existingBook.getQuantity() > 0) {
+//                existingBook.setQuantity(existingBook.getQuantity() - 1);
+//                existingBook.getReaders().add(reader);
+//                validBooks.add(existingBook);
+//                bookRepository.save(existingBook);
+//            }
+//        }
+//
+//        reader.setBooks(validBooks);
+//        readerRepository.save(reader);
+//
+//        return validBooks;
+//
+// //   ---------------------
 
     @DeleteMapping("/readers/{readerId}")
     @Transactional

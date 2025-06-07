@@ -66,6 +66,7 @@
 
 package com.anirudh.bookstore.demo.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 
 import java.util.List;
@@ -103,6 +104,25 @@ public class Book {
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "book_id")
     private List<Review> reviews;
+
+    @ManyToMany(
+            fetch = FetchType.LAZY,
+            cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH}
+    )
+    @JoinTable(
+            name = "book_reader",
+            joinColumns = @JoinColumn(name = "book_id"),
+            inverseJoinColumns = @JoinColumn(name = "reader_id")
+    )
+    private List<Reader> readers;
+
+    public List<Reader> getReaders() {
+        return readers;
+    }
+
+    public void setReaders(List<Reader> readers) {
+        this.readers = readers;
+    }
 
     public Author getAuthor() {
         return author;

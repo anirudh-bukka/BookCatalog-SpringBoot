@@ -14,7 +14,7 @@ public class BookServiceImpl implements BookService {
 
     private BookRepository bookRepository;
 
-    public BookServiceImpl() {}
+//    public BookServiceImpl() {}
 
     @Autowired
     public BookServiceImpl(BookRepository bookRepository) {

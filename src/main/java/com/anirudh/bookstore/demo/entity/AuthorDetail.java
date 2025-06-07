@@ -1,10 +1,13 @@
 package com.anirudh.bookstore.demo.entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
 
 @Entity
 @Table(name = "author_detail")
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class AuthorDetail {
 
     @Id
@@ -19,7 +22,6 @@ public class AuthorDetail {
     private String hobby;
 
     @OneToOne(mappedBy = "authorDetail", cascade = CascadeType.ALL)
-    @JsonBackReference
     private Author author;
 
     public Author getAuthor() {
