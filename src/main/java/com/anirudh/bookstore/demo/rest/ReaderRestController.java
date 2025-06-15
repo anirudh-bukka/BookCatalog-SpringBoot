@@ -3,13 +3,13 @@ package com.anirudh.bookstore.demo.rest;
 import com.anirudh.bookstore.demo.dao.BookRepository;
 import com.anirudh.bookstore.demo.dao.ReaderRepository;
 import com.anirudh.bookstore.demo.dto.ReaderRequest;
+import com.anirudh.bookstore.demo.dto.ReaderResponse;
 import com.anirudh.bookstore.demo.entity.Book;
 import com.anirudh.bookstore.demo.entity.Reader;
 import com.anirudh.bookstore.demo.service.BookService;
 import com.anirudh.bookstore.demo.service.ReaderService;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -37,22 +37,27 @@ public class ReaderRestController {
         this.bookRepository = bookRepository;
     }
 
+//    @GetMapping("/readers")
+//    public List<Reader> retrieveAllReaders() {
+//        return readerRepository.findAll();
+//    }
+
     @GetMapping("/readers")
-    public List<Reader> retrieveAllReaders() {
-        return readerRepository.findAll();
+    public List<ReaderResponse> retrieveAllReaders() {
+        return readerService.listAllReaders();
     }
 
-    @GetMapping("/readers/{readerId}")
-    public Reader retrieveReaderById(@PathVariable int readerId) {
-        Optional<Reader> tempReader = readerRepository.findById(readerId);
-        Reader reader = null;
-        if(tempReader.isPresent())
-            reader = tempReader.get();
-        else
-            throw new RuntimeException("Reader with id " + readerId + " not found");
-
-        return reader;
-    }
+//    @GetMapping("/readers/{readerId}")
+//    public Reader retrieveReaderById(@PathVariable int readerId) {
+//        Optional<Reader> tempReader = readerRepository.findById(readerId);
+//        Reader reader = null;
+//        if(tempReader.isPresent())
+//            reader = tempReader.get();
+//        else
+//            throw new RuntimeException("Reader with id " + readerId + " not found");
+//
+//        return reader;
+//    }
 
     public Book getBook() {
         return book;
@@ -156,5 +161,15 @@ public class ReaderRestController {
     public String deleteReaderById(@PathVariable int readerId) {
         readerRepository.deleteById(readerId);
         return "Deleted reader with id: " + readerId;
+    }
+
+//    @Autowired
+//    public ReaderRestController(ReaderService readerService) {
+//        this.readerService = readerService;
+//    }
+
+    @GetMapping("/readers/{readerId}")
+    public ReaderResponse getReaderById(@PathVariable int readerId) {
+        return readerService.getReaderById(readerId);
     }
 }

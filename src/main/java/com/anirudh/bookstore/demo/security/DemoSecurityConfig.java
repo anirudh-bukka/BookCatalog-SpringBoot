@@ -14,12 +14,10 @@ public class DemoSecurityConfig {
         http
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/booksApi/**").permitAll()
-                        .requestMatchers("/booksApi/**").authenticated()
-                        .requestMatchers("/authorsApi/**").authenticated()
-                        .requestMatchers("/readersApi/**").permitAll()
-                        .requestMatchers("/readersApi/readers").permitAll()
-                        .requestMatchers("/readersApi/**").authenticated()
+                        .requestMatchers("/booksApi/**").permitAll() // Allow all access to booksApi
+                        .requestMatchers("/authorsApi/**").authenticated() // Require authentication for authorsApi
+                        .requestMatchers("/readersApi/readers").permitAll() // Allow access to specific readers endpoint
+                        .requestMatchers("/readersApi/**").authenticated() // Require authentication for other readersApi endpoints
                 )
                 .httpBasic(Customizer.withDefaults());
         return http.build();
