@@ -7,7 +7,7 @@ import com.anirudh.bookstore.demo.entity.Review;
 public class ReviewRequest {
     private Book book;
     private Reader reader;
-    private Review review;
+    private String review;
 
     public Book getBook() {
         return book;
@@ -25,11 +25,11 @@ public class ReviewRequest {
         this.reader = reader;
     }
 
-    public Review getReview() {
+    public String getReview() {
         return review;
     }
 
-    public void setReview(Review review) {
+    public void setReview(String review) {
         this.review = review;
     }
 }
