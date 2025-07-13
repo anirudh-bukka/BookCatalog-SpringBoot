@@ -1,69 +1,3 @@
-//package com.anirudh.bookstore.demo.entity;
-//
-//import jakarta.persistence.*;
-//
-//@Entity
-//@Table(name = "book")
-//public class Book {
-//
-//    @Id
-//    @GeneratedValue(strategy = GenerationType.IDENTITY)
-//    @Column(name = "id")
-//    private int id;
-//
-//    @Column(name = "title")
-//    private String title;
-//
-//    @ManyToOne
-//    @JoinColumn(name = "author_id", nullable = false)
-//    private Author author;
-//
-//    @Column(name = "author_id", insertable = false, updatable = false)
-//    private int authorId;
-//
-//    // Getters and setters
-//    public int getId() {
-//        return id;
-//    }
-//
-//    public void setId(int id) {
-//        this.id = id;
-//    }
-//
-//    public String getTitle() {
-//        return title;
-//    }
-//
-//    public void setTitle(String title) {
-//        this.title = title;
-//    }
-//
-//    public Author getAuthor() {
-//        return author;
-//    }
-//
-//    public void setAuthor(Author author) {
-//        this.author = author;
-//    }
-//
-//    public int getAuthorId() {
-//        return authorId;
-//    }
-//
-//    public void setAuthorId(int authorId) {
-//        this.authorId = authorId;
-//    }
-//}
-
-
-
-
-
-
-
-
-
-
 package com.anirudh.bookstore.demo.entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
@@ -101,8 +35,7 @@ public class Book {
     @JoinColumn(name = "author_id")
     private Author author;
 
-    @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name = "book_id")
+    @OneToMany(mappedBy = "book", cascade = CascadeType.ALL)
     private List<Review> reviews;
 
     @ManyToMany(
@@ -182,3 +115,61 @@ public class Book {
         this.quantity = quantity;
     }
 }
+
+
+//package com.anirudh.bookstore.demo.entity;
+//
+//import jakarta.persistence.*;
+//
+//@Entity
+//@Table(name = "book")
+//public class Book {
+//
+//    @Id
+//    @GeneratedValue(strategy = GenerationType.IDENTITY)
+//    @Column(name = "id")
+//    private int id;
+//
+//    @Column(name = "title")
+//    private String title;
+//
+//    @ManyToOne
+//    @JoinColumn(name = "author_id", nullable = false)
+//    private Author author;
+//
+//    @Column(name = "author_id", insertable = false, updatable = false)
+//    private int authorId;
+//
+//    // Getters and setters
+//    public int getId() {
+//        return id;
+//    }
+//
+//    public void setId(int id) {
+//        this.id = id;
+//    }
+//
+//    public String getTitle() {
+//        return title;
+//    }
+//
+//    public void setTitle(String title) {
+//        this.title = title;
+//    }
+//
+//    public Author getAuthor() {
+//        return author;
+//    }
+//
+//    public void setAuthor(Author author) {
+//        this.author = author;
+//    }
+//
+//    public int getAuthorId() {
+//        return authorId;
+//    }
+//
+//    public void setAuthorId(int authorId) {
+//        this.authorId = authorId;
+//    }
+//}
