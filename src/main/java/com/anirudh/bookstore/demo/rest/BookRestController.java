@@ -2,6 +2,8 @@ package com.anirudh.bookstore.demo.rest;
 
 import com.anirudh.bookstore.demo.dao.AuthorRepository;
 import com.anirudh.bookstore.demo.dto.BookRequest;
+import com.anirudh.bookstore.demo.dto.BookResponse;
+import com.anirudh.bookstore.demo.dto.ReviewRequest;
 import com.anirudh.bookstore.demo.entity.Author;
 import com.anirudh.bookstore.demo.entity.Book;
 import com.anirudh.bookstore.demo.service.BookService;
@@ -28,14 +30,23 @@ public class BookRestController {
         this.bookService = bookService;
     }
 
+//    @GetMapping("/books")
+//    public List<Book> retrieveAllBooks() {
+//        return bookService.listAllBooks();
+//    }
+//
+//    @GetMapping("/books/{bookId}")
+//    public Book retrieveBookById(@PathVariable int bookId) {
+//        return bookService.findBookById(bookId);
+//    }
     @GetMapping("/books")
-    public List<Book> retrieveAllBooks() {
+    public List<BookResponse> getAllBooks() {
         return bookService.listAllBooks();
     }
 
-    @GetMapping("/books/{bookId}")
-    public Book retrieveBookById(@PathVariable int bookId) {
-        return bookService.findBookById(bookId);
+    @GetMapping("/books/{id}")
+    public BookResponse getBookById(@PathVariable int id) {
+        return bookService.findBookById(id);
     }
 
     @PostMapping("/books")
@@ -60,5 +71,11 @@ public class BookRestController {
     @Transactional
     public void removeBookById(@PathVariable int bookId) {
         bookService.deleteBookById(bookId);
+    }
+
+    @PostMapping("/books/{id}/reviews")
+    @Transactional
+    public void addReviewToBook(@PathVariable int id, @RequestBody ReviewRequest reviewRequest) {
+        bookService.addReviewToBook(id, reviewRequest);
     }
 }
